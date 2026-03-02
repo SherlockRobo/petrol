@@ -230,4 +230,61 @@
         let myYield = currentFin.div / cost;
 
         // 更新UI
-        document.getElementById('out_div').innerText = "HK
+        document.getElementById('out_div').innerText = "HK$ " + currentFin.div.toFixed(2);
+        document.getElementById('out_profit').innerText = "预估利润: " + Math.round(currentFin.profit) + " 亿元";
+        document.getElementById('out_safe').innerText = "HK$ " + safePrice.toFixed(2);
+        document.getElementById('out_current_yield').innerText = (currentYield * 100).toFixed(1) + "%";
+        document.getElementById('out_my_yield').innerText = (myYield * 100).toFixed(1) + "%";
+
+        // 红绿灯逻辑
+        let light = document.getElementById('status_light');
+        let title = document.getElementById('action_title');
+        let desc = document.getElementById('action_desc');
+        let cardSafe = document.getElementById('card_safe');
+
+        if (price <= safePrice * 0.95) {
+            light.style.backgroundColor = "var(--green)"; light.style.color = "var(--green)";
+            title.innerText = "🟢 绿灯区：安全垫极厚，放心买入";
+            desc.innerText = `当前市价低于安全价，实际股息率高达 ${(currentYield*100).toFixed(1)}%。`;
+            cardSafe.style.borderTopColor = "var(--green)";
+        } else if (price <= safePrice * 1.05) {
+            light.style.backgroundColor = "var(--yellow)"; light.style.color = "var(--yellow)";
+            title.innerText = "🟡 黄灯区：观望或小额定投";
+            desc.innerText = `股息率在目标 ${targetYield*100}% 附近，停止大额追高。`;
+            cardSafe.style.borderTopColor = "var(--yellow)";
+        } else {
+            light.style.backgroundColor = "var(--red)"; light.style.color = "var(--red)";
+            title.innerText = "🔴 红灯区：严重透支，考虑止盈换仓";
+            desc.innerText = `价格已透支基本面，股息率跌至 ${(currentYield*100).toFixed(1)}%。建议转投 SCHD。`;
+            cardSafe.style.borderTopColor = "var(--red)";
+        }
+
+        // 表格更新
+        let tableOilPrices = [50, 60, simOil, 80, 90];
+        tableOilPrices = [...new Set(tableOilPrices)].sort((a,b) => a-b);
+        let tbody = document.getElementById('table_body');
+        tbody.innerHTML = "";
+        
+        tableOilPrices.forEach(o => {
+            let fin = getFinancials(o, simBarrel);
+            let sPrice = fin.div / targetYield;
+            let cYield = fin.div / price;
+            
+            let tr = document.createElement('tr');
+            if (o === simOil) tr.className = "current-row";
+            tr.innerHTML = `
+                <td>$${o.toFixed(2)}</td>
+                <td>${Math.round(fin.profit)}</td>
+                <td>${fin.div.toFixed(2)}</td>
+                <td>${sPrice.toFixed(2)}</td>
+                <td style="color: ${cYield >= targetYield ? 'var(--green)' : 'var(--red)'}">${(cYield*100).toFixed(1)}%</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    window.onload = calculate;
+</script>
+
+</body>
+</html>
