@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中海油 (00883.HK) 终极动态仪表盘</title>
+    <title>中海油 (00883.HK) 终极动态仪表盘 V2</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -31,15 +31,13 @@
             border-bottom: 2px solid var(--accent); padding-bottom: 10px;
         }
         
-        /* 区域标题 */
         .section-title {
             color: var(--accent); font-size: 1.1rem;
             margin: 20px 0 10px 0; display: flex; align-items: center;
         }
         
-        /* 控制面板样式 */
         .controls-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px; background-color: #252525; padding: 20px;
             border-radius: 12px; margin-bottom: 10px;
         }
@@ -47,14 +45,13 @@
         .controls-grid.finance { border-left: 5px solid #ff9800; background-color: #2a2218; }
         
         .control-group { display: flex; flex-direction: column; }
-        .control-group label { font-size: 0.9rem; color: #aaa; margin-bottom: 5px; }
+        .control-group label { font-size: 0.85rem; color: #aaa; margin-bottom: 5px; }
         .control-group input[type="number"] {
             background-color: #121212; border: 1px solid var(--border-color);
             color: #fff; padding: 8px; border-radius: 4px; font-size: 1.1rem; margin-bottom: 5px;
         }
         .control-group input[type="range"] { width: 100%; cursor: pointer; }
         
-        /* 数据卡片样式 */
         .metrics-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px; margin: 20px 0;
@@ -69,7 +66,6 @@
         .metric { font-size: 2rem; font-weight: bold; color: #fff; margin-bottom: 5px; }
         .metric-sub { font-size: 0.9rem; color: #888; }
 
-        /* 状态指示灯 */
         .status-box {
             background-color: #252525; padding: 20px; border-radius: 12px;
             display: flex; align-items: center; margin-bottom: 20px;
@@ -79,11 +75,10 @@
             margin-right: 15px; box-shadow: 0 0 10px currentColor;
         }
 
-        /* 表格样式 */
         .table-container { background-color: var(--card-bg); border-radius: 12px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 15px; text-align: center; border-bottom: 1px solid var(--border-color); }
-        th { background-color: #2a2a2a; color: var(--accent); }
+        th { background-color: #2a2a2a; color: var(--accent); font-size: 0.95rem; }
         .current-row { background-color: rgba(0, 188, 212, 0.1); font-weight: bold; }
     </style>
 </head>
@@ -91,25 +86,29 @@
 
 <div class="container">
     <header>
-        <h1>🎯 00883.HK 终极决策仪表盘</h1>
+        <h1>🎯 00883.HK 终极决策仪表盘 V2</h1>
     </header>
 
     <div class="section-title">📊 市场环境模拟 (日常盯盘拖动)</div>
     <div class="controls-grid market">
         <div class="control-group">
-            <label>🛢️ 模拟国际油价 (美元)</label>
+            <label>🛢️ 模拟国际油价 ($)</label>
             <input type="number" id="in_oil" value="70.00" step="1" oninput="calculate()">
             <input type="range" id="slide_oil" min="40" max="120" value="70" step="1" oninput="sync('slide_oil', 'in_oil')">
         </div>
         <div class="control-group">
-            <label>📉 当前市价 (港元)</label>
+            <label>📉 当前市价 (HK$)</label>
             <input type="number" id="in_price" value="26.30" step="0.1" oninput="calculate()">
             <input type="range" id="slide_price" min="15" max="40" value="26.3" step="0.1" oninput="sync('slide_price', 'in_price')">
         </div>
         <div class="control-group">
-            <label>💰 你的持仓成本 (港元)</label>
+            <label>🛠️ 模拟桶油成本 ($)</label>
+            <input type="number" id="in_sim_barrel" value="27.35" step="0.1" oninput="calculate()">
+            <input type="range" id="slide_barrel" min="20" max="40" value="27.35" step="0.1" oninput="sync('slide_barrel', 'in_sim_barrel')">
+        </div>
+        <div class="control-group">
+            <label>💰 你的持仓成本 (HK$)</label>
             <input type="number" id="in_cost" value="27.00" step="0.1" oninput="calculate()">
-            <input type="range" id="slide_cost" min="15" max="40" value="27.0" step="0.1" oninput="sync('slide_cost', 'in_cost')">
         </div>
         <div class="control-group">
             <label>🎯 目标股息率 (%)</label>
@@ -120,23 +119,23 @@
     <div class="section-title">🏢 财报基准更新 (出财报后更新此区域)</div>
     <div class="controls-grid finance">
         <div class="control-group">
-            <label>📑 最新财报年化净利 (亿人民币)</label>
-            <input type="number" id="in_base_profit" value="1360" step="10" oninput="calculate()" title="例如：上半年赚700亿，年化就是1400亿">
+            <label>📑 年化净利基准 (亿)</label>
+            <input type="number" id="in_base_profit" value="1360" step="10" oninput="calculate()">
         </div>
         <div class="control-group">
-            <label>🛢️ 该财报对应的均价 (美元)</label>
-            <input type="number" id="in_base_oil" value="68.00" step="0.1" oninput="calculate()" title="实现该利润时的平均油价">
+            <label>🛢️ 对应油价基准 ($)</label>
+            <input type="number" id="in_base_oil" value="68.00" step="0.1" oninput="calculate()">
         </div>
         <div class="control-group">
-            <label>🛠️ 最新桶油成本 (美元)</label>
-            <input type="number" id="in_barrel" value="27.35" step="0.01" oninput="calculate()">
+            <label>🛠️ 财报基准成本 ($)</label>
+            <input type="number" id="in_base_barrel" value="27.35" step="0.01" oninput="calculate()">
         </div>
         <div class="control-group">
-            <label>🤝 公司承诺派息率 (%)</label>
+            <label>🤝 承诺派息率 (%)</label>
             <input type="number" id="in_payout" value="45.5" step="0.1" oninput="calculate()">
         </div>
         <div class="control-group">
-            <label>💱 汇率 (港币兑人民币)</label>
+            <label>💱 汇率 (HKD/RMB)</label>
             <input type="number" id="in_exchange" value="0.88" step="0.01" oninput="calculate()">
         </div>
     </div>
@@ -184,26 +183,26 @@
                 </tr>
             </thead>
             <tbody id="table_body">
-                </tbody>
+            </tbody>
         </table>
     </div>
 </div>
 
 <script>
     const TOTAL_SHARES = 476; // 总股本约 476 亿股
-    const PROFIT_MULTIPLIER = 20; // 利润弹性: 净利差每变动1美元，全年利润变动约 20 亿元
+    const PROFIT_MULTIPLIER = 20; // 净利差每变动1美元，全年利润变动约 20 亿元人民币
+    const TAX_MULTIPLIER = 1.05; // 税费放大系数
 
-    // 核心计算逻辑：基于基准数据的差值推算
-    function getFinancials(simOil) {
+    // 核心计算逻辑：基于基准数据的差值推算 (包含油价变动与成本变动)
+    function getFinancials(simOil, simBarrel) {
         let baseProfit = parseFloat(document.getElementById('in_base_profit').value);
         let baseOil = parseFloat(document.getElementById('in_base_oil').value);
-        let barrelCost = parseFloat(document.getElementById('in_barrel').value);
+        let baseBarrel = parseFloat(document.getElementById('in_base_barrel').value);
         let payoutRatio = parseFloat(document.getElementById('in_payout').value) / 100;
         let exchangeRate = parseFloat(document.getElementById('in_exchange').value);
 
-        // 假设当前填入的基准利润，就是在当前的“桶油成本”下产生的
-        // 净利差变化 = (模拟油价 - 财报基准油价) * 1 (这里简化税费影响，直接测算油价弹性)
-        let effectiveMargin = simOil - baseOil; 
+        // 有效净利差 = (当前油价 - 基准油价) - (当前成本 - 基准成本) * 税费系数
+        let effectiveMargin = (simOil - baseOil) - ((simBarrel - baseBarrel) * TAX_MULTIPLIER); 
         
         let profit = baseProfit + (effectiveMargin * PROFIT_MULTIPLIER);
         if(profit < 0) profit = 0; 
@@ -220,71 +219,15 @@
 
     function calculate() {
         let simOil = parseFloat(document.getElementById('in_oil').value);
+        let simBarrel = parseFloat(document.getElementById('in_sim_barrel').value);
         let price = parseFloat(document.getElementById('in_price').value);
         let cost = parseFloat(document.getElementById('in_cost').value);
         let targetYield = parseFloat(document.getElementById('in_target').value) / 100;
 
-        let currentFin = getFinancials(simOil);
+        let currentFin = getFinancials(simOil, simBarrel);
         let safePrice = currentFin.div / targetYield;
         let currentYield = currentFin.div / price;
         let myYield = currentFin.div / cost;
 
         // 更新UI
-        document.getElementById('out_div').innerText = "HK$ " + currentFin.div.toFixed(2);
-        document.getElementById('out_profit').innerText = "预估利润: " + Math.round(currentFin.profit) + " 亿元";
-        document.getElementById('out_safe').innerText = "HK$ " + safePrice.toFixed(2);
-        document.getElementById('out_current_yield').innerText = (currentYield * 100).toFixed(1) + "%";
-        document.getElementById('out_my_yield').innerText = (myYield * 100).toFixed(1) + "%";
-
-        // 红绿灯逻辑
-        let light = document.getElementById('status_light');
-        let title = document.getElementById('action_title');
-        let desc = document.getElementById('action_desc');
-        let cardSafe = document.getElementById('card_safe');
-
-        if (price <= safePrice * 0.95) {
-            light.style.backgroundColor = "var(--green)"; light.style.color = "var(--green)";
-            title.innerText = "🟢 绿灯区：安全垫极厚，放心买入";
-            desc.innerText = `实际股息率高达 ${(currentYield*100).toFixed(1)}%，属于极佳击球区。`;
-            cardSafe.style.borderTopColor = "var(--green)";
-        } else if (price <= safePrice * 1.05) {
-            light.style.backgroundColor = "var(--yellow)"; light.style.color = "var(--yellow)";
-            title.innerText = "🟡 黄灯区：观望或小额定投";
-            desc.innerText = `股息率在目标 ${targetYield*100}% 附近，停止大额追高。`;
-            cardSafe.style.borderTopColor = "var(--yellow)";
-        } else {
-            light.style.backgroundColor = "var(--red)"; light.style.color = "var(--red)";
-            title.innerText = "🔴 红灯区：严重透支，考虑止盈换仓";
-            desc.innerText = `价格已透支基本面，股息率跌至 ${(currentYield*100).toFixed(1)}%。建议转投 SCHD 等资产。`;
-            cardSafe.style.borderTopColor = "var(--red)";
-        }
-
-        // 表格更新
-        let tableOilPrices = [50, 60, simOil, 80, 90];
-        tableOilPrices = [...new Set(tableOilPrices)].sort((a,b) => a-b);
-        let tbody = document.getElementById('table_body');
-        tbody.innerHTML = "";
-        
-        tableOilPrices.forEach(o => {
-            let fin = getFinancials(o);
-            let sPrice = fin.div / targetYield;
-            let cYield = fin.div / price;
-            
-            let tr = document.createElement('tr');
-            if (o === simOil) tr.className = "current-row";
-            tr.innerHTML = `
-                <td>$${o.toFixed(2)}</td>
-                <td>${Math.round(fin.profit)}</td>
-                <td>${fin.div.toFixed(2)}</td>
-                <td>${sPrice.toFixed(2)}</td>
-                <td style="color: ${cYield >= targetYield ? 'var(--green)' : 'var(--red)'}">${(cYield*100).toFixed(1)}%</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    window.onload = calculate;
-</script>
-
-</body>
-</html>
+        document.getElementById('out_div').innerText = "HK
