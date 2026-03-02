@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中海油 (00883.HK) 终极动态仪表盘 V2</title>
+    <title>中海油 (00883.HK) 终极动态仪表盘 V3</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -30,6 +30,15 @@
             text-align: center; margin-bottom: 20px;
             border-bottom: 2px solid var(--accent); padding-bottom: 10px;
         }
+        .version-badge {
+            background-color: var(--accent);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.5em;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
         
         .section-title {
             color: var(--accent); font-size: 1.1rem;
@@ -49,7 +58,9 @@
         .control-group input[type="number"] {
             background-color: #121212; border: 1px solid var(--border-color);
             color: #fff; padding: 8px; border-radius: 4px; font-size: 1.1rem; margin-bottom: 5px;
+            transition: border-color 0.3s;
         }
+        .control-group input[type="number"]:focus { border-color: var(--accent); outline: none; }
         .control-group input[type="range"] { width: 100%; cursor: pointer; }
         
         .metrics-grid {
@@ -59,7 +70,7 @@
         .card {
             background-color: var(--card-bg); padding: 20px; border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-align: center;
-            border-top: 4px solid var(--border-color);
+            border-top: 4px solid var(--border-color); transition: all 0.3s;
         }
         .card.highlight { border-top-color: var(--accent); }
         .card h3 { margin: 0 0 10px 0; color: #bbb; font-size: 1rem; font-weight: normal; }
@@ -72,7 +83,7 @@
         }
         .light {
             width: 20px; height: 20px; border-radius: 50%;
-            margin-right: 15px; box-shadow: 0 0 10px currentColor;
+            margin-right: 15px; box-shadow: 0 0 10px currentColor; transition: all 0.3s;
         }
 
         .table-container { background-color: var(--card-bg); border-radius: 12px; overflow: hidden; }
@@ -86,10 +97,10 @@
 
 <div class="container">
     <header>
-        <h1>🎯 00883.HK 终极决策仪表盘 V2</h1>
+        <h1>🎯 00883.HK 终极决策仪表盘 <span class="version-badge">V3 修复版</span></h1>
     </header>
 
-    <div class="section-title">📊 市场环境模拟 (日常盯盘拖动)</div>
+    <div class="section-title">📊 市场环境模拟 (日常盯盘拖动滑块)</div>
     <div class="controls-grid market">
         <div class="control-group">
             <label>🛢️ 模拟国际油价 ($)</label>
@@ -102,33 +113,33 @@
             <input type="range" id="slide_price" min="15" max="40" value="26.3" step="0.1" oninput="sync('slide_price', 'in_price')">
         </div>
         <div class="control-group">
-            <label>🛠️ 模拟桶油成本 ($)</label>
+            <label>🛠️ 模拟当前桶油成本 ($)</label>
             <input type="number" id="in_sim_barrel" value="27.35" step="0.1" oninput="calculate()">
             <input type="range" id="slide_barrel" min="20" max="40" value="27.35" step="0.1" oninput="sync('slide_barrel', 'in_sim_barrel')">
         </div>
         <div class="control-group">
-            <label>💰 你的持仓成本 (HK$)</label>
+            <label>💰 你的持仓均价 (HK$)</label>
             <input type="number" id="in_cost" value="27.00" step="0.1" oninput="calculate()">
         </div>
         <div class="control-group">
-            <label>🎯 目标股息率 (%)</label>
+            <label>🎯 目标底线股息率 (%)</label>
             <input type="number" id="in_target" value="5.5" step="0.1" oninput="calculate()">
         </div>
     </div>
 
-    <div class="section-title">🏢 财报基准更新 (出财报后更新此区域)</div>
+    <div class="section-title">🏢 财报基准底层数据 (出新财报后在此更新)</div>
     <div class="controls-grid finance">
         <div class="control-group">
             <label>📑 年化净利基准 (亿)</label>
             <input type="number" id="in_base_profit" value="1360" step="10" oninput="calculate()">
         </div>
         <div class="control-group">
-            <label>🛢️ 对应油价基准 ($)</label>
+            <label>🛢️ 基准利润对应油价 ($)</label>
             <input type="number" id="in_base_oil" value="68.00" step="0.1" oninput="calculate()">
         </div>
         <div class="control-group">
-            <label>🛠️ 财报基准成本 ($)</label>
-            <input type="number" id="in_base_barrel" value="27.35" step="0.01" oninput="calculate()">
+            <label>🛠️ 财报基准桶油成本 ($)</label>
+            <input type="number" id="in_base_barrel" value="27.35" step="0.01" oninput="syncBaseCost()">
         </div>
         <div class="control-group">
             <label>🤝 承诺派息率 (%)</label>
@@ -154,7 +165,7 @@
         <div class="card">
             <h3>当前市价股息率</h3>
             <div class="metric" id="out_current_yield" style="color: var(--accent);">0.0%</div>
-            <div class="metric-sub">按最新股价计算</div>
+            <div class="metric-sub">按模拟市价计算</div>
         </div>
         <div class="card">
             <h3>你的持仓股息率</h3>
@@ -192,6 +203,14 @@
     const TOTAL_SHARES = 476; // 总股本约 476 亿股
     const PROFIT_MULTIPLIER = 20; // 净利差每变动1美元，全年利润变动约 20 亿元人民币
     const TAX_MULTIPLIER = 1.05; // 税费放大系数
+
+    // 同步底部基准成本到顶部的模拟成本，防止改了底部没反应
+    function syncBaseCost() {
+        let baseCost = document.getElementById('in_base_barrel').value;
+        document.getElementById('in_sim_barrel').value = baseCost;
+        document.getElementById('slide_barrel').value = baseCost;
+        calculate();
+    }
 
     // 核心计算逻辑：基于基准数据的差值推算 (包含油价变动与成本变动)
     function getFinancials(simOil, simBarrel) {
@@ -255,7 +274,7 @@
         } else {
             light.style.backgroundColor = "var(--red)"; light.style.color = "var(--red)";
             title.innerText = "🔴 红灯区：严重透支，考虑止盈换仓";
-            desc.innerText = `价格已透支基本面，股息率跌至 ${(currentYield*100).toFixed(1)}%。建议转投 SCHD。`;
+            desc.innerText = `价格已透支基本面，股息率跌至 ${(currentYield*100).toFixed(1)}%。考虑卖出。`;
             cardSafe.style.borderTopColor = "var(--red)";
         }
 
