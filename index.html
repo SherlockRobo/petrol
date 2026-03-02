@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中海油 (00883.HK) 投资决策仪表盘</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --green: #4caf50;
+            --yellow: #ffeb3b;
+            --red: #f44336;
+            --accent: #00bcd4;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .metric {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .sub-text {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .status-light {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background-color: #2a2a2a;
+            color: var(--accent);
+        }
+        .action-guide {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #252525;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent);
+        }
+        .highlight-row { background-color: rgba(0, 188, 212, 0.1); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>中海油 (00883.HK) 收息压舱石仪表盘</h1>
+        <p>实时监控：油价成本、股息安全垫与决策红绿灯</p>
+    </header>
+
+    <div class="grid">
+        <div class="card">
+            <h3>🛢️ 核心底牌 (Q3 2025)</h3>
+            <div class="metric">$27.35</div>
+            <div class="sub-text">桶油主要成本 (美元/桶)</div>
+            <p class="sub-text">极度安全的盈利护城河</p>
+        </div>
+
+        <div class="card">
+            <h3>💼 我的持仓</h3>
+            <div class="metric">200 <span style="font-size: 1rem;">股</span></div>
+            <div class="sub-text">买入均价: HK$27.00</div>
+            <p class="sub-text">预期年化股息率: ~5.44%</p>
+        </div>
+
+        <div class="card">
+            <h3>⚓ 5% 股息安全锚点</h3>
+            <div class="metric">HK$29.40</div>
+            <div class="sub-text">基于 70美元/桶 油价测算</div>
+            <p class="sub-text">低于此价均为“收息安全区”</p>
+        </div>
+    </div>
+
+    <div class="card" style="padding: 0;">
+        <h3 style="padding: 20px 0 0 20px;">📊 油价/利润/分红敏感性分析</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>国际油价</th>
+                    <th>预估利润 (亿)</th>
+                    <th>每股分红 (HK$)</th>
+                    <th>5% 安全股价</th>
+                    <th>当前实际股息率</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>$50 (悲观)</td>
+                    <td>约 1000</td>
+                    <td>1.08</td>
+                    <td>21.60</td>
+                    <td>4.3%</td>
+                </tr>
+                <tr>
+                    <td>$60 (震荡)</td>
+                    <td>约 1200</td>
+                    <td>1.30</td>
+                    <td>26.00</td>
+                    <td>5.2%</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td><strong>$68 (当前基准)</strong></td>
+                    <td><strong>1360</strong></td>
+                    <td><strong>1.47</strong></td>
+                    <td><strong>29.40</strong></td>
+                    <td><strong>5.9%</strong></td>
+                </tr>
+                <tr>
+                    <td>$80 (地缘利好)</td>
+                    <td>约 1600</td>
+                    <td>1.73</td>
+                    <td>34.60</td>
+                    <td>6.9%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="action-guide">
+        <h3>🚦 实操决策红绿灯 (Action Guide)</h3>
+        <p><span class="status-light" style="background-color: var(--green);"></span> <strong>绿灯区 (&lt; 26港元)</strong>: 闭眼买入区。股息率高于 6%，安全垫极厚。</p>
+        <p><span class="status-light" style="background-color: var(--yellow);"></span> <strong>黄灯区 (26-29港元)</strong>: 观望/择机区。股息率在 5%-5.8% 之间，停止大额追高。</p>
+        <p><span class="status-light" style="background-color: var(--red);"></span> <strong>红灯区 (&gt; 30港元)</strong>: 止盈/警示区。情绪过热，股息率破 5%。考虑减仓转投 SCHD。</p>
+    </div>
+
+    <footer style="margin-top: 40px; text-align: center; color: #555; font-size: 0.8rem;">
+        数据源：CNOOC 2025H1 & Q3 报告 | 汇率假设 1:0.88 | 派息率 45.5%
+    </footer>
+</div>
+
+</body>
+</html>
